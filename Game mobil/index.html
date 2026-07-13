@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Road Rush – Audi vs Dunia</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <div id="flash-overlay"></div>
+        <div id="weather-overlay"></div>
+        <div id="daynight-overlay"></div>
+
+        <div class="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+        <div id="distance-text">Jarak: 1500m</div>
+        
+        <div class="hud-stats-left">
+            <div id="lives-display">❤️❤️❤️</div>
+            <div id="coins-display">🪙 0</div>
+        </div>
+
+        <div class="hud-stats-right">
+            <div id="score-text">Skor: 0</div>
+            <div id="highscore-text">Tertinggi: 0</div>
+        </div>
+
+        <div id="notification-toast"></div>
+        <div id="active-powerup-badge"></div>
+
+        <div id="ammo-panel" class="ammo-panel" title="Amunisi"></div>
+        <button id="sound-toggle" class="sound-toggle-btn" title="Suara: M">🔊</button>
+        <audio id="bg-music" src="Music/Download.mp3" loop preload="auto"></audio>
+
+        <div class="game-environment">
+            <div class="scenery houses-left"></div>
+            <div class="scenery sidewalk-left"></div>
+            <div class="scenery grass-left"></div>
+
+            <div class="road-container" id="road">
+                <div class="separator first"></div>
+                <div class="separator second"></div>
+                <div id="finish-line">🏁 FINISH 🏁</div>
+                <div id="player"></div>
+            </div>
+
+            <div class="scenery grass-right"></div>
+            <div class="scenery sidewalk-right"></div>
+            <div class="scenery houses-right"></div>
+        </div>
+
+        <!-- ═══ GAME OVER SCREEN ═══ -->
+        <div id="gameover-screen" class="endscreen-overlay" style="display:none;">
+            <div class="endscreen-box gameover-box">
+                <div class="crash-icon">💥</div>
+                <h1 class="endscreen-title gameover-title">GAME OVER</h1>
+                <p class="endscreen-sub" id="go-newrecord" style="display:none;">🏅 REKOR BARU!</p>
+
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-icon">🏁</span>
+                        <span class="stat-label">Skor</span>
+                        <span class="stat-value" id="go-score">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">👑</span>
+                        <span class="stat-label">Tertinggi</span>
+                        <span class="stat-value" id="go-highscore">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">🪙</span>
+                        <span class="stat-label">Koin</span>
+                        <span class="stat-value" id="go-coins">0</span>
+                    </div>
+                </div>
+
+                <div class="endscreen-buttons">
+                    <button class="end-btn retry-btn" id="go-retry">
+                        <span>🔄</span> Coba Lagi
+                    </button>
+                    <button class="end-btn menu-btn" id="go-menu">
+                        <span>🏠</span> Menu
+                    </button>
+                </div>
+                <p class="endscreen-hint">atau tekan <kbd>Spasi</kbd> / <kbd>Enter</kbd></p>
+            </div>
+        </div>
+
+        <!-- ═══ WIN / FINISH SCREEN ═══ -->
+        <div id="win-screen" class="endscreen-overlay" style="display:none;">
+            <div class="endscreen-box win-box">
+                <div class="trophy-icon">🏆</div>
+                <h1 class="endscreen-title win-title">MISI SELESAI!</h1>
+                <p class="endscreen-sub" id="win-newrecord" style="display:none;">🎉 REKOR BARU!</p>
+
+                <div class="stat-grid">
+                    <div class="stat-card win-stat">
+                        <span class="stat-icon">⭐</span>
+                        <span class="stat-label">Skor Akhir</span>
+                        <span class="stat-value" id="win-score">0</span>
+                    </div>
+                    <div class="stat-card win-stat">
+                        <span class="stat-icon">👑</span>
+                        <span class="stat-label">Tertinggi</span>
+                        <span class="stat-value" id="win-highscore">0</span>
+                    </div>
+                    <div class="stat-card win-stat">
+                        <span class="stat-icon">🪙</span>
+                        <span class="stat-label">Koin</span>
+                        <span class="stat-value" id="win-coins">0</span>
+                    </div>
+                </div>
+
+                <div class="endscreen-buttons">
+                    <button class="end-btn retry-btn" id="win-retry">
+                        <span>🔄</span> Main Lagi
+                    </button>
+                    <button class="end-btn menu-btn" id="win-menu">
+                        <span>🏠</span> Menu
+                    </button>
+                </div>
+                <p class="endscreen-hint">atau tekan <kbd>Spasi</kbd> / <kbd>Enter</kbd></p>
+            </div>
+        </div>
+
+
+        <!-- ═══ MAIN MENU ═══ -->
+        <div id="rules" class="rules-overlay">
+            <div class="rules-box">
+                <div class="menu-header">
+                    <span class="menu-icon">🚗</span>
+                    <h3>ROAD RUSH v2.0</h3>
+                    <span class="menu-icon">🚗</span>
+                </div>
+
+                <!-- Saldo Koin -->
+                <div class="menu-wallet">
+                    <span class="wallet-icon">🪙</span>
+                    <span class="wallet-label">Tabungan:</span>
+                    <span id="menu-total-coins" class="wallet-amount">0</span>
+                    <button id="open-shop-btn" class="shop-open-btn">🛒 Toko Mobil</button>
+                </div>
+
+                <p class="menu-subtitle">Pilih mobilmu dan jadilah penguasa jalanan!</p>
+
+                <!-- Garage — diisi dinamis oleh JS -->
+                <div class="garage-selector" id="garage-selector"></div>
+
+                <div class="controls-info sharp-text">
+                    <ul>
+                        <li><strong>⬅️ ➡️</strong> Ganti jalur | <strong>⬆️ ⬇️</strong> Maju/Mundur</li>
+                        <li><strong>Z</strong> Tembak | <strong>X</strong> Nuke Bom | <strong>C</strong> Laser</li>
+                        <li><strong>P</strong> / <strong>ESC</strong> Pause Game</li>
+                    </ul>
+                </div>
+
+                <div class="speed-settings">
+                    <span class="speed-label">Pilih Kecepatan:</span>
+                    <div class="speed-options">
+                        <button class="speed-option" data-speed="0.7">Easy</button>
+                        <button class="speed-option active" data-speed="0.85">Normal</button>
+                        <button class="speed-option" data-speed="1.0">Hard</button>
+                    </div>
+                </div>
+
+                <button id="startBtn" class="glow-button">Tancap Gas!</button>
+            </div>
+        </div>
+
+        <!-- ═══ CAR SHOP ═══ -->
+        <div id="shop-overlay" class="shop-overlay" style="display:none;">
+            <div class="shop-panel">
+                <div class="shop-header">
+                    <button id="shop-back-btn" class="shop-back-btn">← Kembali</button>
+                    <h2 class="shop-title">🛒 Toko Mobil</h2>
+                    <div class="shop-wallet">
+                        <span>🪙</span>
+                        <span id="shop-coin-display">0</span>
+                    </div>
+                </div>
+                <div class="shop-grid" id="shop-grid"></div>
+            </div>
+        </div>
+
+        <div id="pause-menu" class="pause-overlay">
+            <div class="pause-box">
+                <h2>⏸️ GAME PAUSED</h2>
+                <p>Tekan 'P' atau tombol di bawah untuk melanjutkan</p>
+                <button id="resumeBtn">▶️ LANJUTKAN</button>
+            </div>
+        </div>
+
+        <div class="mobile-controls">
+            <button id="btn-up">⬆️</button>
+            <div class="horizontal-btns">
+                <button id="btn-left">⬅️</button>
+                <button id="btn-down">⬇️</button>
+                <button id="btn-right">➡️</button>
+                <button id="btn-shoot">🔫</button>
+                <button id="btn-bomb">💣</button>
+                <button id="btn-laser">⚡</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
